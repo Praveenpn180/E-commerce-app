@@ -248,7 +248,11 @@ router.post('/add-to-cart',verifyuserLogin, (req,res)=>{
 
 router.get('/move-to-cart/:pro',verifyuserLogin,async(req,res)=>{
   try{
-    userHelpers.addToCart(req.params.pro,req.session.user._id).then(()=>{
+    let data={
+      proId:req.params.pro,
+      quantity:1
+     }
+    userHelpers.addToCart(data,req.session.user._id).then(()=>{
       userHelpers.removeWishlist(req.params.pro,req.session.user._id).then((resolve)=>{
         res.json({status:true})
       })
