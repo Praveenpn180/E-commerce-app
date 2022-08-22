@@ -437,8 +437,14 @@ router.post('/place-order',verifyuserLogin,async(req,res)=>{
     products=await userHelpers.getCartProductslist(req.body.userId)
     totalPrice=await userHelpers.getTotalAmound(req.body.userId)
     address=await userHelpers.getDeliveryAddress(req.body.userId,req.body.address)
+    console.log(req.body);
+    let coupon=false
+    let discount=0
    coupon=await userHelpers.getCoupon(req.body.couponCode)
-   let discount=(totalPrice/100)*parseInt(coupon.couponValue)
+  if(coupon){
+    discount=(totalPrice/100)*parseInt(coupon.couponValue)
+  }
+   
    let totalAmount=parseInt(totalPrice-discount)*100
     userHelpers.placeOrder(req.body,products,totalPrice,address,coupon).then((orderId)=>{
   if(req.body.paymentMethod=='COD'){

@@ -113,13 +113,13 @@ module.exports={
         return new Promise(async(resolve,reject)=>{
          let userCart=await db.get().collection(collection.CART_COLLECTION).findOne({user:objectid(userId)})
          if(userCart){
-            let proExist=userCart.products.findIndex(product=> product.item==proId)
+            let proExist=userCart.products.findIndex(product=> product.item==data.proId)
             console.log(proExist);
             if(proExist!=-1){
                 db.get().collection(collection.CART_COLLECTION)
-                .updateOne({user:objectid(userId),'products.item':objectid(proId)},
+                .updateOne({user:objectid(userId),'products.item':objectid(data.proId)},
                 {
-                    $inc:{'products.$.quantity':quantity}
+                    $inc:{'products.$.quantity':data.quantity}
                 }).then(()=>{
                     resolve()
                 })
@@ -355,7 +355,19 @@ console.log(order,products,totalPrice);
 let status=order.paymentMethod==='COD'?'Placed':'pending'
 
 let total=parseInt(totalPrice)
-let Discount=(parseInt(totalPrice)/100)*parseInt(coupon.couponValue)
+let Discount=0
+if(coupon){
+    Discount=(parseInt(totalPrice)/100)*parseInt(coupon.couponValue)
+}else{
+     coupon={
+        couponCode:0 ,
+        offerType:0,
+        couponValue:0
+    }
+    
+}
+console.log(coupon);
+
 let orderObj={
     deliveryDetails:{
         Name:address.firstName+' '+address.lastName,
@@ -533,6 +545,7 @@ let cart={}
         })
     },
     generateRazorpay:(orderId,total)=>{
+        
         return new Promise(async(resolve,reject)=>{
            let options={
                 amount: total,
@@ -715,6 +728,7 @@ let cart={}
         return new Promise(async(resolve,reject)=>{
          let offer= await db.get().collection(collection.COUPON_COLLECTION).findOne({couponCode:coupon})
          resolve(offer)
+         console.log(offer);
         })
     }
     ,

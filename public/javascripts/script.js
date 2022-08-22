@@ -8,7 +8,7 @@ function addToWishlist(proId){
         success:(response)=>{
            
             document.getElementById('wcount').innerHTML=response.wcount
-            
+            document.getElementById('wcount1').innerHTML=response.wcount 
         }
     })
 }
