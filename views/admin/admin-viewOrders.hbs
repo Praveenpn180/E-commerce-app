@@ -1,0 +1,97 @@
+<div class="row tm-content-row tm-mt-big" >
+	<div class="col-xl-12 col-lg-12 tm-md-12 tm-sm-12 tm-col">
+		<div class="bg-white tm-block h-100">
+
+			<div class="col-md-8 col-sm-12">
+				<h2 class="tm-block-title d-inline-block">Orders</h2>
+
+			</div>
+			<div class="container">
+
+				<table class="table table-hover   mt-3" id="orderTable">
+					<thead>
+						<tr class="table_head">
+							<th class="" style="width: 60px;">Date</th>
+							<th class="" style="width:100px">Product</th>
+							<th class="" style="width:130px">Address</th>
+							<th class="" style="width: 50px;">Amount</th>
+							<th class="" style="width: 50px;">Payment</th>
+							<th class="" style="width: 50px;">Status</th>
+							<th class="" style="width: 80px;">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each orders}}
+						<tr class="table_row">
+							<td class="" style="width: 80px;">{{date}}</td>
+							<td class="" style="width: 100px;"><img src="/product-images/{{productDetails._id}}.jpg"
+									alt="IMG" style="width: 65px;px ;"> <br>
+								{{productDetails.Name}} <br>
+								{{productDetails.Category}} <br>
+								Brand : {{productDetails.BrandName}} <br>
+								Price : {{productDetails.Price}} <br>
+								Quantity : {{products.products.quantity}}
+							</td>
+							<td class="" style="width: 130px;">{{deliveryDetails.Name}} <br>
+								{{deliveryDetails.Email}} <br>
+								{{deliveryDetails.Phone}} <br>
+								{{deliveryDetails.Address}} <br>
+								{{deliveryDetails.City}} <br>
+								{{deliveryDetails.State}} <br>
+								{{deliveryDetails.Pincode}}
+							</td>
+
+
+							<td class="" style="width: 50px;">{{total}}</td>
+							<td class="" style="width: 50px;">{{paymentMethod}}</td>
+							<td  class="" style="width: 50px;">{{products.products.orderStatus}}</td>
+							<td class="" style="width: 80px;">
+
+								{{#unless products.products.Cancelled}}
+								{{#if placed}}
+								<a id="shipped" href="/admin/orderShipped/{{_id}}/{{products.products.item}}"
+									class="btn btn-outline-primary ">Shipped</a>
+								<a id="delivered" href="/admin/orderDelivered/{{_id}}/{{products.products.item}}"
+									class="btn btn-outline-success ">Delivered</a>
+								<a id="cancel" href="/admin/orderCancel/{{_id}}/{{products.products.item}}"
+									class="btn btn-outline-danger">Cancel</a>
+								{{else if shipped}}
+	
+								<a id="delivered" href="/admin/orderDelivered/{{_id}}/{{products.products.item}}"
+									class="btn btn-outline-success ">Delivered</a>
+								<a id="cancel" href="/admin/orderCancel/{{_id}}/{{products.products.item}}"
+									class="btn btn-outline-danger">Cancel</a>
+								{{else if delivered}}
+                                   <a id="cancel" href="/admin/orderCancel/{{_id}}/{{products.products.item}}"
+									class="btn btn-outline-danger">Cancel</a>
+								{{/if}}
+							
+								{{else}}
+								<h4 class="text-danger">{{products.products.Cancelled}}</h4>
+								<a href="/admin/orderCancel/{{_id}}/{{products.products.item}}" class="">advanced
+									options </a>
+								{{/unless}}
+							</td>
+						</tr>
+						{{/each}}
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function () {
+
+
+		$('#orderTable').wrap('<div id="hide" style="display:none"/>');
+
+		$('#hide').css('display', 'block');
+	});
+
+
+	var table = $('#orderTable').DataTable();
+</script>
+

@@ -1,0 +1,134 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<button class="btn btn-secondary " onclick="CreatePDFfromHTML()" style="float: right;">Download</button>
+{{#each orders}}
+<div class="container html-content " >
+    <div class="row" >
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="row p-5">
+                        <div class="col-md-6">
+                            <img src="/userAssets/images/icons/logo-01.PNG">
+                        </div>
+
+                        <div class="col-md-6 text-right">
+                            <p class="font-weight-bold mb-1">Invoice #{{_id}}</p>
+                            <p class="text-muted">Date: {{date}}</p>
+                        </div>
+                    </div>
+
+
+                    <div class="row pb-5 p-5">
+                        <div class="col-md-6">
+                            <p class="font-weight-bold mb-4">Client Information</p>
+                            <p class="mb-1">{{deliveryDetails.Name}}</p>
+                            <p>{{deliveryDetails.Email}}</p>
+                            <p class="mb-1">{{deliveryDetails.Phone}}</p>
+                            <p class="mb-1">{{deliveryDetails.Address}}</p>
+                            <p class="mb-1">{{deliveryDetails.City}}</p>
+                            <p class="mb-1">{{deliveryDetails.State}}</p>
+                            <p class="mb-1">{{deliveryDetails.Pincode}}</p>
+                        </div>
+
+                        <div class="col-md-6 text-right">
+                            <p class="font-weight-bold mb-4">Payment Details</p>
+                            <p class="mb-1"><span class="text-muted">Payment Method : </span> {{paymentMethod}}</p>
+                            <p class="mb-1"><span class="text-muted">Payment Status : </span> Success</p>
+                        </div>
+                    </div>
+
+                    <div class="row p-5">
+                        <div class="col-md-12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Item</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Description</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Price</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Quantity</th>
+                                         <th class="border-0 text-uppercase small font-weight-bold">Total</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Discount</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Final Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="col-md-3 col-sm-5"style="width: 137px;"><img src="/product-images/{{products.products.product._id}}.jpg" alt="IMG" style="width: 65px;px ;"> <br>
+									{{products.products.product.Name}} <br>
+									{{products.products.product.Category}} <br>
+									Brand : {{products.products.product.BrandName}} <br>
+                                        <td style="width: 400px; ;">{{products.products.product.Description}}</td>
+                                        <td>{{products.products.product.Price}} </td>
+                                        <td>{{products.products.quantity}}</td>
+                                        <td>{{total}}</td>
+                                        <td class="text-success">{{discount}}</td>
+                                        <td>{{finalPrice}}</td>
+                                    </tr>
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-row-reverse bg-dark text-white p-4">
+                        <div class="py-3 px-5 text-right">
+                            <div class="mb-2">Grand Total : </div>
+                            <div class="h2 font-weight-light">{{total}}</div>
+                        </div>
+
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   
+
+</div>
+{{/each}}
+
+<div id="editor"></div>
+
+<style>
+  body {
+    background: grey;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+</style>
+
+
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+<script>
+    //Create PDf from HTML...
+function CreatePDFfromHTML() {
+    var HTML_Width = $(".html-content").width();
+    var HTML_Height = $(".html-content").height();
+    var top_left_margin = 15;
+    var PDF_Width = HTML_Width + (top_left_margin * 2);
+    var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
+    var canvas_image_width = HTML_Width;
+    var canvas_image_height = HTML_Height;
+
+    var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
+
+    html2canvas($(".html-content")[0]).then(function (canvas) {
+        var imgData = canvas.toDataURL("image/jpeg", 1.0);
+        var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
+        pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
+        for (var i = 1; i <= totalPDFPages; i++) { 
+            pdf.addPage(PDF_Width, PDF_Height);
+            pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+        }
+        pdf.save("Your_PDF_Name.pdf");
+        $(".html-content").hide();
+    });
+}
+</script>

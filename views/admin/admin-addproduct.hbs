@@ -1,0 +1,70 @@
+<section>
+    <div class="container mt-4">
+      <div class="row tm-content-row tm-mt-big">
+                <div class="col-xl-12 col-lg-12 tm-md-12 tm-sm-12 tm-col">
+                    <div class="bg-white tm-block h-100">
+        <div class="row">
+            <div class="col-md-6">
+
+<h2 class="text-center">Add Products</h2>
+
+<form action="/admin/add-product" method="post" enctype="multipart/form-data">
+  <div class="form-group" >
+    <label for="formGroupExampleInput">Name</label>
+    <input type="text" class="form-control" name="Name" id="formGroupExampleInput" required >
+  
+  <label for="formGroupExampleInput">Category</label>
+    {{!-- <input type="text" name="Category" class="form-control" id="formGroupExampleInput" > --}}
+<select name="Category" class="form-select form-select-md mb-3 form-control" aria-label=".form-select-lg example" id="formGroupExampleInput">
+  <option id="formGroupExampleInput" selected>Category</option>
+  {{#each category}}
+  <option  value="{{Category}}" >{{Category}}</option>
+  {{/each}}
+</select>
+
+ <label for="formGroupExampleInput">Brand Name</label>
+    <input type="text" name="BrandName" class="form-control" id="formGroupExampleInput" >
+
+    <label for="formGroupExampleInput">Price</label>
+    <input type="number" name="Price" class="form-control" id="formGroupExampleInput">
+
+    <label for="formGroupExampleInput">Description</label>
+    <input type="text" name="Description" class="form-control" id="formGroupExampleInput" >
+
+     <label for="formGroupExampleInput">Stock</label>
+    <input type="number" name="Stock" class="form-control" id="formGroupExampleInput" >
+
+
+
+    <label for="formGroupExampleInput">Image</label>
+    <img class="pt-3" src="" alt="" style="width: 100px;height: auto ;" id="imgview">
+    <input type="file" name="Image" class="form-control" onchange="viewImage(event)" >
+
+    <button type="submit" class="btn btn-success mt-4">Submit</button>
+  <input type="hidden" name="seller" value="admin">
+
+</div>
+</form>
+
+  </div>
+  
+  </div>
+  </div>
+  
+  </div>
+  
+</div>
+  
+ 
+  
+
+
+
+</div>
+</section>
+
+<script>
+   function viewImage(event){
+    document.getElementById('imgview').src=URL.createObjectURL(event.target.files[0])
+   }
+</script>

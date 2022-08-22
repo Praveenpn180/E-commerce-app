@@ -1,0 +1,56 @@
+<section>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6">
+
+<h2 class="text-center">Add Products</h2>
+
+<form action="/vendor/add-product" method="post" enctype="multipart/form-data">
+  <div class="form-group" >
+    <label for="formGroupExampleInput">Name</label>
+    <input type="text" class="form-control" name="Name" id="formGroupExampleInput" required >
+  
+  <label for="formGroupExampleInput">Category</label>
+
+<select name="Category" class="form-select form-select-xxl mb-3 form-control" id="formGroupExampleInput" aria-label=".form-select-lg example" id="formGroupExampleInput">
+  <option id="formGroupExampleInput" selected>Category</option>
+  {{#each category}}
+  <option  value="{{Category}}" >{{Category}}</option>
+  {{/each}}
+</select>
+
+        
+    <label for="formGroupExampleInput">Price</label>
+    <input type="number" name="Price" class="form-control" id="formGroupExampleInput">
+
+    <label for="formGroupExampleInput">Description</label>
+    <input type="text" name="Description" class="form-control" id="formGroupExampleInput" >
+
+    <label for="formGroupExampleInput">Image</label>
+    <img class="pt-3" src="/product-images/{{product._id}}.jpg" alt="" style="width: 100px;height: auto ;" id="imgview">
+    <input type="file" name="Image" class="form-control" onchange="viewImage(event)" >
+
+    
+  <input type="hidden" name="seller" value="{{vendor._id}}">
+    <button type="submit" class="btn btn-success mt-4">Submit</button>
+     
+
+</div>
+</form>
+
+  </div>
+  
+  </div>
+  
+
+
+
+
+</div>
+</section>
+
+<script>
+   function viewImage(event){
+    document.getElementById('imgview').src=URL.createObjectURL(event.target.files[0])
+   }
+</script>

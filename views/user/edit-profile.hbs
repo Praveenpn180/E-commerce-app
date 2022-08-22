@@ -1,0 +1,180 @@
+<section style="background-color: #eee;">
+  <div class="container py-5">
+    <div class="row">
+      <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="col-lg-4">
+        <form action="/changeProfilePhoto" method="post" enctype="multipart/form-data">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              {{!-- <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                id="imgview" class="rounded-circle img-fluid" style="width: 150px;"> --}}
+
+              <img src="/profile-photos/{{user._id}}.jpg" alt="Not fount"
+                onerror="this.src='/profile-photos/avathar.jpg'" id="imgview" class="rounded-circle img-fluid bg-light"
+                style="width: 150px; ">
+
+              <input id="fileInput" type="file" onchange="changepic(event)" style="display:none;" name="profilePhoto">
+
+              <h5 class="my-3">{{user.firstName}} {{user.lastName}}</h5>
+              <p class="text-muted mb-1">{{user.email}}</p>
+              <p class="text-muted mb-4">{{user.phone}}</p>
+              <div class="d-flex justify-content-center mb-2">
+
+                <button type="button" class="btn btn-outline-primary ms-1"
+                  onclick="document.getElementById('fileInput').click();" id="save1">Update Photo</button>
+                <button type="submit" class="btn btn-outline-primary" style="display:none;" id="save">Save</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
+
+      <div class="col-lg-8">
+        <form action="/userDataUpdate" method="post">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Full Name</p>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" value="{{user.firstName}}" name="firstName" readonly>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Last Name</p>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" value="{{user.lastName}}" name="lastName" readonly>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Email</p>
+                </div>
+                <div class="col-sm-9">
+                  <input type="email" value="{{user.email}}" name="email" readonly>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Phone</p>
+                </div>
+                <div class="col-sm-9">
+                  <input type="tel" name="Phone" value="{{user.phone}}" maxlength="10" readonly>
+                </div>
+              </div>
+              <hr>
+
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Address</p>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" value="{{user.Address}}" name="Address" style="width:400px ;">
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">State</p>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" name="State" value="{{user.State}}">
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">City</p>
+                </div>
+                <div class="col-sm-9">
+                  <input type="text" name="City" value="{{user.City}}">
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Pincode</p>
+                </div>
+                <div class="col-sm-9">
+                  <input type="tel" name="Pincode" maxlength="6" value="{{user.Pincode}}">
+                </div>
+              </div>
+              <hr>
+              <button type="submit" class="btn btn-outline-secondary allign-center">Update</button>
+
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+    <div class="row">
+      <h4>Addresses<br><br></h4>
+    </div>
+    <div class="row">
+      {{#each address}}
+      <div class="col-md-4">
+
+        <form action="/edit-delivery-address" method="post">
+        <input type="text" name="id" value="{{address.addressId}}" hidden>
+
+          <label for="firstName">FirstName</label> <input type="text" name="firstName" id="" placeholder="FirstName"
+            value="{{address.firstName}}">
+          <label for="firstName">LastName</label> <input type="text" name="lastName" id="" placeholder="LastName"
+            value="{{address.lastName}}">
+          <label for="firstName">Email</label> <input type="text" name="email" id="" placeholder="Email"
+            value="{{address.email}}">
+          <label for="firstName">Phone</label> <input type="text" name="Phone" id="" placeholder="Phone"
+            value="{{address.Phone}}">
+          <label for="firstName">Address</label> <input type="text" name="Address" id="" placeholder="Address"
+            value="{{address.Address}}">
+          <label for="firstName">City</label> <input type="text" name="City" id="" placeholder="City"
+            value="{{address.City}}">
+          <label for="firstName">State</label> <input type="text" name="State" id="" placeholder="State"
+            value="{{address.State}}">
+          <label for="firstName">Pincode</label> <input type="text" name="Pincode" id="" placeholder="Pincode"
+            value="{{address.Pincode}}">
+            <button class="btn btn-outline-primary" type="submit" >Update Address</button>
+        </form>
+
+      </div>
+      {{/each}}
+    </div>
+
+
+
+
+  </div>
+</section>
+<script>
+  function changepic(event) {
+    document.getElementById('imgview').src = URL.createObjectURL(event.target.files[0])
+    document.getElementById('save').style.display = 'block'
+    document.getElementById('save1').style.display = 'none'
+  }
+
+
+
+
+
+
+
+</script>

@@ -1,0 +1,45 @@
+
+    <div class="container">
+        <div class="row tm-mt-big">
+            <div class="col-12 mx-auto tm-login-col">
+                <div class="bg-white tm-block">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <i class="fas fa-3x fa-tachometer-alt tm-site-icon text-center"></i>
+                            <h2 class="tm-block-title mt-3">Vendor Login</h2>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <form method="post" action="/vendor/vendorlogin">
+                 {{#if loginErr}}
+    <p class="text-danger">{{loginErr}}</p>
+    {{/if}}
+                <!-- Email input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="form3Example3">Email address</label>
+                  <input type="email" id="form3Example3" class="form-control" name="vemail" />
+                  
+                </div>
+
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="form3Example4">Password</label>
+                  <input type="password" id="form3Example4" class="form-control" name="vpassword" />
+                  
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary btn-block mb-4">Login</button>
+<br>
+<label class="form-label" for="form3Example4">Dont have an account?</label>
+<a href="/vendor/signup">Create new account</a>
+                
+              </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </div>

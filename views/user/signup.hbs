@@ -1,0 +1,112 @@
+
+<!-- Section: Design Block -->
+<section class="">
+  <!-- Jumbotron -->
+  <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
+    <div class="container">
+      <div class="row gx-lg-5 align-items-center">
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <h1 class="my-5 display-3 fw-bold ls-tight">
+            The Store <br />
+            <span class="text-primary">So close to your heart</span>
+          </h1>
+          <p style="color: hsl(217, 10%, 50.8%)">
+            Zango-Store is a digital retail chain of stores with operations across GCC. We provide variety of 
+            products such as Smartphones, Electronics, Computers, Laptops, Multimedia, Accessories etc with quality 
+            products and services with best customers care.
+          </p>
+        </div>
+
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <div class="card">
+            <div class="card-body py-5 px-md-5">
+              <form method="post" action="/signup" id="signup" class="text-danger">
+                <!-- 2 column grid layout with text inputs for the first and last names -->
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                        <label class="form-label text-dark" for="form3Example1" >First name</label>
+                      <input type="text" id="form3Example1" class="form-control" name="firstName" required />
+                      
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                        <label class="form-label text-dark" for="form3Example2">Last name</label>
+                      <input type="text" id="form3Example2" class="form-control" name="lastName" required />
+                      
+                    </div>
+                  </div>
+                </div>
+                     {{#if signupErr}}
+    <p class="text-danger">{{signupErr}}</p>
+    {{/if}}
+
+                <!-- Email input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label text-dark" for="form3Example3">Email address</label>
+                  <input type="email" id="form3Example3" class="form-control" name="email" required />
+                  
+                </div>
+                <!--phone input -->
+                <div class="form-outline mb-4">
+                  <label class="form-label text-dark" for="form3Example9">Phone</label>
+                 <input type="tel" id="phone" class="form-control" name="phone" required>
+                 
+                </div>
+    
+                
+
+                <div class="form-outline mb-4">
+                    <label class="form-label text-dark" for="form3Example4">New Password</label>
+                  <input type="password" id="password1" name="Password" class="form-control" required />
+                  
+                </div>
+
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <label class="form-label text-dark" for="form3Example4">Confirm Password</label>
+                  <input type="password" id="password2" name="up2" class="form-control"  required />
+                  
+                </div>
+               
+
+                <!-- Checkbox -->
+                <div class="form-check d-flex justify-content-center mb-4">
+                 
+                  <input class=" me-2 " type="checkbox" value="" id="form2Example33" checked />
+                   <label class="form-check-label text-dark" for="form2Example33">
+                    I accept the terms of use and Privacy policy
+                  </label>
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary btn-block mb-4">
+                  Sign up
+                </button>
+                    <br>
+                     <label class="form-label text-dark" for="form3Example4">Already have an account?</label>
+            <a href="/login">Login</a>
+                
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Jumbotron -->
+</section>
+<!-- Section: Design Block -->
+
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js">
+  </script>
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.js">
+  </script>
+<script>
+  $("#signup").validate();
+</script>

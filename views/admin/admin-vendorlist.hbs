@@ -1,0 +1,105 @@
+
+<div class="row tm-content-row tm-mt-big">
+                <div class="col-xl-12 col-lg-12 tm-md-12 tm-sm-12 tm-col">
+                    <div class="bg-white tm-block h-100">
+
+
+{{#if vendorrequest}}
+<div class="row tm-content-row tm-mt-big">
+                <div class="col-xl-12 col-lg-12 tm-md-12 tm-sm-12 tm-col">
+                    <div class="bg-white tm-block h-100">
+                      
+                            <div class="col-md-8 col-sm-12">
+                                <h2 class="tm-block-title d-inline-block">Vendor Request</h2>
+
+                            </div>
+<div class="container">
+
+<table class="table table-hover table-striped tm-table-striped-even mt-3">
+  <thead>
+    <tr>
+      <th scope="col">No</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Phone</th>
+      <th scope="col">Modify</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each vendorrequest}}
+    <tr>
+      <th scope="row">{{@index}}</th>
+      <td>{{this.VfirstName}}</td>
+      <td>{{this.VlastName}}</td>
+      <td>{{Vemail}}</td>
+      <td>{{Vphone}}</td>
+       <td><a class="btn btn-success" href="/admin/approve-vendor/{{this._id}}">Approve</a></td>
+       <td><a class="btn btn-danger" href="/admin/reject-vendor/{{this._id}}">Reject</a></td>
+    </tr>
+   {{/each}}
+  </tbody>
+</table>
+
+</div>
+{{/if}}
+
+<div class="row tm-content-row tm-mt-big">
+                <div class="col-xl-12 col-lg-12 tm-md-12 tm-sm-12 tm-col">
+                    <div class="bg-white tm-block h-100">
+                      
+                            <div class="col-md-8 col-sm-12">
+                                <h2 class="tm-block-title d-inline-block">vendors</h2>
+
+                            </div>
+<div class="container">
+
+<table class="table table-hover table-striped tm-table-striped-even mt-3" id="vendorsTable">
+  <thead>
+    <tr>
+      <th scope="col">No</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Phone</th>
+      <th scope="col">Modify</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each vendors}}
+    <tr>
+      <th scope="row">{{inc @index}}</th>
+      <td>{{this.VfirstName}}</td>
+      <td>{{this.VlastName}}</td>
+      <td>{{Vemail}}</td>
+      <td>{{Vphone}}</td>
+       <td>
+          {{#if vendorBlocked}}
+        <a class="btn btn-warning" href="/admin/unBlock-vendor/{{this._id}}">Unblock</a>
+        {{else}}
+          <a class="btn btn-primary" href="/admin/Block-vendor/{{this._id}}">Block</a>
+          {{/if}}
+          
+          <a class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{this.Name}} ?')" href="/admin/delete-user/{{this._id}}">Delete</a>
+          </td>
+    </tr>
+   {{/each}}
+  </tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<script>
+    $(document).ready(function () {
+
+
+        $('#vendorsTable').wrap('<div id="hide" style="display:none"/>');
+
+        $('#hide').css('display', 'block');
+    });
+
+
+    var table = $('#vendorsTable').DataTable();
+</script>

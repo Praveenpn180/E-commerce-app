@@ -1,0 +1,75 @@
+<!-- Shoping Cart -->
+	<form class="bg0 p-t-75 p-b-85">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 col-xl-12  m-b-50">
+					<div class="m-l-25 m-r--38 m-lr-0-xl">
+						<div class="wrap-table-shopping-cart table-responsive">
+							<table class="table-shopping-cart  container-fluid">
+								<tr class="table_head">
+									<th class="col-md-1 col-sm-2" style="width: 60px;">Date</th>
+									<th class="col-md-3 col-sm-5" style="width:200px">Product</th>
+									<th class="col-md-3 col-sm-5" style="width:200px">Address</th>
+									<th class="col-md-1 col-sm-3"style="width: 50px;">Price</th>
+									<th class="col-md-1 col-sm-3"style="width: 50px;">Discount</th>
+									<th class="col-md-1 col-sm-3"style="width: 50px;">Final Price</th>
+                                    <th class="col-md-1 col-sm-3"style="width: 50px;">Payment</th>
+                                    <th class="col-md-1 col-sm-3"style="width: 50px;">Status</th>
+                                    <th class="col-md-1 col-sm-3"style="width: 80px;">Details</th>
+								</tr>
+								{{#each orders}}
+ 							
+								<tr class="table">
+									<td class="col-md-1 col-sm-2"style="width: 80px;">{{date}}</td>
+									<td class="col-md-3 col-sm-5"style="width: 200px;"><img src="/product-images/{{products.products.product._id}}.jpg" alt="IMG" style="width: 65px;px ;"> <br>
+									{{products.products.product.Name}} <br>
+									{{products.products.product.Category}} <br>
+									Brand : {{products.products.product.BrandName}} <br>
+									Price : {{products.products.product.Price}} <br>
+									Quantity : {{products.products.product.quantity}}
+									</td>
+									<td class="col-md-3 col-sm-5"style="width: 200px;">{{deliveryDetails.Name}} <br>
+									{{deliveryDetails.Email}} <br>
+									{{deliveryDetails.Phone}} <br>
+									{{deliveryDetails.Address}} <br>
+									{{deliveryDetails.City}} <br>
+									{{deliveryDetails.State}} <br>
+									{{deliveryDetails.Pincode}}
+									</td>
+									<td   class="col-md-1 col-sm-3"style="width: 50px;">{{total}}</td>
+									<td   class="col-md-1 col-sm-3"style="width: 50px;">{{discount}}</td>
+									<td   class="col-md-1 col-sm-3"style="width: 50px;">{{finalPrice}}</td>
+									<td   class="col-md-1 col-sm-3"style="width: 50px;">{{paymentMethod}}</td>
+									<td   class="col-md-1 col-sm-3"style="width: 50px;">{{products.products.orderStatus}}</td>
+									<td   class="col-md-1 col-sm-3"style="width: 80px;"><a href="/view-order-products/{{_id}}/{{products.products.item}}" class="btn btn-outline-primary ">Details</a>
+									</td>
+								</tr>
+								{{/each}}
+								
+							</table>
+							
+							
+						</div>
+
+						
+					</div>
+				</div>
+
+				
+
+			</div>
+		</div>
+	</form>
+	<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding-top: 10px;
+  padding-bottom: 20px;
+  padding-left: 30px;
+  padding-right: 40px;
+}
+</style>
+

@@ -1,0 +1,59 @@
+<div class="row tm-content-row tm-mt-big">
+    <div class="col-xl-12 col-lg-12 tm-md-12 tm-sm-12 tm-col">
+        <div class="bg-white tm-block h-100">
+
+            <div class="col-md-8 col-sm-12">
+                <h2 class="tm-block-title d-inline-block">Order</h2>
+
+            </div>
+            <div class="container">
+
+                <table class="table table-hover table-striped tm-table-striped-even mt-3" id="orderTable">
+                    <thead>
+                        <tr class="table_head">
+                            <th class="" style="width: 60px;">Date</th>
+                            <th class="" style="width:100px">Product</th>
+                            <th class="" style="width:130px">Address</th>
+                            <th class="" style="width: 50px;">Amount</th>
+                            <th class="" style="width: 50px;">Payment</th>
+                            <th class="" style="width: 50px;">Status</th>
+                            <th class="" style="width: 80px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="table_row">
+                            <td class="" style="width: 80px;">{{order.date}}</td>
+                            <td class="" style="width: 100px;"><img src="/product-images/{{order.productDetails._id}}.jpg"
+                                    alt="IMG" style="width: 65px;px ;"> <br>
+                                {{order.productDetails.Name}} <br>
+                                {{order.productDetails.Category}} <br>
+                                Brand : {{order.productDetails.BrandName}} <br>
+                                Price : {{order.productDetails.Price}} <br>
+                                Quantity : {{order.products.products.quantity}}
+                            </td>
+                            <td class="" style="width: 130px;">{{order.deliveryDetails.Name}} <br>
+                                {{order.deliveryDetails.Email}} <br>
+                                {{order.deliveryDetails.Phone}} <br>
+                                {{order.deliveryDetails.Address}} <br>
+                                {{order.deliveryDetails.City}} <br>
+                                {{order.deliveryDetails.State}} <br>
+                                {{order.deliveryDetails.Pincode}}
+                            </td>
+
+
+                            <td class="" style="width: 50px;">{{order.total}}</td>
+                            <td class="" style="width: 50px;">{{order.paymentMethod}}</td>
+                            <td class="" style="width: 50px;">{{order.status}}</td>
+                            <td class="" style="width: 80px;"><a href="/changeOrderStatus/{{_id}}"
+                                    class="btn btn-outline-primary ">Update</a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

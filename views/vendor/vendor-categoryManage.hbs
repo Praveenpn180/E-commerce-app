@@ -1,0 +1,71 @@
+<body class="bg01">
+    <div class="container">
+ <div class="row tm-mt-big">
+            <div class="col-xl-8 col-lg-10 col-md-12 col-sm-12">
+                <div class="bg-white tm-block">
+                    <div class="row">
+                        <div class="col-12">
+        <div class="row mt-4">
+            <div class="col-md-3">
+            <a id="category" class="btn btn-success ml-auto" href="#"  onclick="addcategory()">Add Category</a>
+        </div>
+        <div id="addcat" class="m-3" style="display:none;" >
+            <form action="/vendor/addcategory" method="post">
+              <label for="">New Category</label>
+              <input type="text" class="col-sm-3" name="Category">
+              <button type="submit" class="btn btn-outline-secondary m-1">Add</button>
+            </form>
+        </div>
+
+<table class="table table-hover table-striped tm-table-striped-even mt-3">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Category</th>
+     
+    </tr>
+  </thead>
+  <tbody>
+    {{#each category}}
+    <tr>
+      <th scope="row">{{@index}}</th>
+      <td>{{Category}}</td>
+       <td>
+          <a class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{Category}} ?')" href="/vendor/delete-category/{{this._id}}">Delete</a>
+          </td>
+    </tr>
+   {{/each}}
+  </tbody>
+
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+
+<script>
+  x.style.display = "block"
+function addcategory() {
+  var x = document.getElementById("addcat");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+ {{!-- y.style.display = "block"
+function delcategory() {
+  var y = document.getElementById("delcat");
+  if (y.style.display === "none") {
+    y.style.display = "block";
+  } else {
+    y.style.display = "none";
+  }
+} --}}
+        
+</script>
+
