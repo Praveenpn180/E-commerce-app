@@ -28,8 +28,9 @@ module.exports={
     },
     checkUnique:(userData)=>{
         return new Promise(async(resolve,reject)=>{
+            let phone=null
          let email=await db.get().collection(collection.USER_COLLECTION).findOne({email:userData.email})
-         let phone=await db.get().collection(collection.USER_COLLECTION).findOne({phone:userData.phone}).then(()=>{
+          phone=await db.get().collection(collection.USER_COLLECTION).findOne({phone:userData.phone}).then(()=>{
             console.log(email);
             if(email){
                response.emailexist=true
@@ -39,6 +40,10 @@ module.exports={
              response.phoneexist=true
              resolve(response)
              console.log("phone exist")
+                        }
+                        else{
+                           console.log('dddddddd');
+                            resolve(response)
                         }
                         })
          })

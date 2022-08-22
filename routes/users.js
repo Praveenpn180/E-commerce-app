@@ -84,7 +84,7 @@ router.post('/signup',(req,res)=>{
   try{
     req.session.body=req.body
     userHelpers.checkUnique(req.body).then((response)=>{
-     console.log(response.emailexist);
+    
      if(response.emailexist){
        req.session.signupErr='Email already exist'
        res.redirect('/signup')
@@ -94,6 +94,7 @@ router.post('/signup',(req,res)=>{
        res.redirect('/signup')
        req.session.signupErr=false
      }else{
+      console.log('twilio');
        twilioHelper.doSms(req.session.body).then((data)=>{
          if(data){
            res.redirect('/otp')
