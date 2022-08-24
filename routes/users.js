@@ -272,10 +272,17 @@ router.get('/move-to-cart/:pro',verifyuserLogin,async(req,res)=>{
 router.get('/add-to-wishlist/:pro',verifyuserLogin, async(req,res)=>{
   try{
 
-    userHelpers.addToWishlist(req.params.pro,req.session.user._id).then(()=>{
-      userHelpers.getWishlistCount(req.session.user._id).then((wcount)=>{
-        res.json({status:true,wcount})
-      })
+    userHelpers.addToWishlist(req.params.pro,req.session.user._id).then((response)=>{
+      if(response.data=='added'){
+        userHelpers.getWishlistCount(req.session.user._id).then((wcount)=>{
+          res.json({status:true,wcount})
+        })
+      }else if(response.data=='removed'){
+        userHelpers.getWishlistCount(req.session.user._id).then((wcount)=>{
+          res.json({status1:true,wcount})
+        })
+      }
+      
     })
   }
   catch(err){

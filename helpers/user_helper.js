@@ -158,8 +158,13 @@ module.exports = {
             if (!item) {
                 db.get().collection(collection.USER_COLLECTION).updateOne({ _id: objectid(userId) },
                     { $push: { wishlist: { item: objectid(proId) } } }, { upsert: true }).then((response) => {
-                        resolve()
+                        resolve({data:'added'})
                     })
+            }else{
+                db.get().collection(collection.USER_COLLECTION).updateOne({ _id: objectid(userId) },
+                { $pull: { wishlist: { item: objectid(proId) } } }).then((response) => {
+                    resolve({data:'removed'})
+                })
             }
 
         })

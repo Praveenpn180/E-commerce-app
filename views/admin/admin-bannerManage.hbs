@@ -140,8 +140,8 @@
 									<option value="banner3">Banner Right Side</option>
 								</select>
 								<label for="formGroupExampleInput">Image</label>
-								<img class="pt-3" src="" alt="" style="width: 100px;height: auto ;" id="imgview2">
-								<input type="file" name="Image" class="form-control" onchange="viewImage(event)">
+								<img class="pt-3" src="" alt="" style="width: 100px;height: auto ;" id="imgview3">
+								<input type="file" name="Image" class="form-control" onchange="viewImage1(event)">
 
 								<label for="formGroupExampleInput">Category</label>
 
@@ -170,5 +170,10 @@
 <script>
 	function viewImage(event) {
 		document.getElementById('imgview2').src = URL.createObjectURL(event.target.files[0])
+	}
+</script>
+<script>
+	function viewImage1(event) {
+		document.getElementById('imgview3').src = URL.createObjectURL(event.target.files[0])
 	}
 </script>

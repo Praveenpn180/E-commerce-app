@@ -6,9 +6,20 @@ function addToWishlist(proId){
         url:'/add-to-wishlist/'+proId,
         method:'get',
         success:(response)=>{
+            if(response.status){
+                swal("item added to wishlist!", {
+                    icon: "success"  }) 
+               
+                document.getElementById('wcount').innerHTML=response.wcount
+                document.getElementById('wcount1').innerHTML=response.wcount 
+            }else if(response.status1){
+                swal("item has been removed from wishlist!", {
+                    icon: "success"  }) 
+                    document.getElementById('wcount').innerHTML=response.wcount
+                    document.getElementById('wcount1').innerHTML=response.wcount 
+            }
            
-            document.getElementById('wcount').innerHTML=response.wcount
-            document.getElementById('wcount1').innerHTML=response.wcount 
+           
         }
     })
 }

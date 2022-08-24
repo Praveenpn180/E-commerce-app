@@ -86,29 +86,20 @@
 
 						<!--  -->
 						<div class="flex-w flex-m p-l-100 p-t-40 respon7">
-							<div class="flex-m bor9 p-r-10 m-r-11">
-								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
-									<i class="zmdi zmdi-favorite"></i>
-								</a>
+							<div class="block2-txt-child2 flex-r p-t-3">
+								<button onclick="addToWishlist('{{product._id}}')" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2 ">
+									<img class="icon-heart1 dis-block trans-04" src="/userAssets/images/icons/icon-heart-01.png" style="width:40px ;" alt="ICON">
+									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="/userAssets/images/icons/icon-heart-02.png" style="width:40px ;" alt="ICON">
+								</button>
 							</div>
 
-							<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Facebook">
-								<i class="fa fa-facebook"></i>
-							</a>
-
-							<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Twitter">
-								<i class="fa fa-twitter"></i>
-							</a>
-
-							<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Google Plus">
-								<i class="fa fa-google-plus"></i>
-							</a>
+						
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div class="bor10 m-t-50 p-t-43 p-b-40">
+			{{!-- <div class="bor10 m-t-50 p-t-43 p-b-40">
 				<!-- Tab01 -->
 				<div class="tab01">
 					<!-- Nav tabs -->
@@ -280,7 +271,7 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div> --}}
 		</div>
 
 		
@@ -303,7 +294,7 @@
 
 						{{#each category}}
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+							<a href="/category/{{Category}}" class="stext-107 cl7 hov-cl1 trans-04">
 								{{Category}}
 							</a>
 						</li>
@@ -344,7 +335,7 @@
 					</ul>
 				</div>
 
-				<div class="col-sm-6 col-lg-3 p-b-50">
+				{{!-- <div class="col-sm-6 col-lg-3 p-b-50">
 					<h4 class="stext-301 cl0 p-b-30">
 						GET IN TOUCH
 					</h4>
@@ -366,7 +357,7 @@
 							<i class="fa fa-pinterest-p"></i>
 						</a>
 					</div>
-				</div>
+				</div> --}}
 
 				<div class="col-sm-6 col-lg-3 p-b-50">
 					<h4 class="stext-301 cl0 p-b-30">
@@ -431,7 +422,8 @@
 <!--===============================================================================================-->
 
 	<script>
-		$('.js-addwish-b2, .js-addwish-detail').on('click', function(e){
+			
+		$('.js-addwish-b2').on('click', function(e){
 			e.preventDefault();
 		});
 
