@@ -50,7 +50,7 @@ router.get('/',async function(req, res, next) {
        
      });
   }
-  catch{
+  catch(err){
     res.redirect('/login')
   }
 
@@ -65,7 +65,7 @@ router.get('/login',(req,res)=>{
       req.session.loginErr=false
     }
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -74,7 +74,7 @@ router.get('/signup',(req,res)=>{
   try{
     res.render('user/signup',{layout:'userLayout', "signupErr":req.session.signupErr})
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -105,7 +105,7 @@ router.post('/signup',(req,res)=>{
      }
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
 
@@ -116,7 +116,7 @@ router.get('/otp',(req,res)=>{
   try{
     res.render('user/userotp',{layout:'userLayout', user:true})
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -133,7 +133,7 @@ router.post('/otp',(req,res)=>{
     }
   })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -161,7 +161,7 @@ router.post('/login',(req,res)=>{
       }
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -174,7 +174,7 @@ router.get('/logout',(req,res)=>{
     user=false
     res.redirect('/')
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -198,7 +198,7 @@ router.get('/category/:cat',verifyuserLogin,async(req,res)=>{
   
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
   
@@ -219,11 +219,16 @@ router.get('/product/:id',verifyuserLogin,async(req,res)=>{
     wcount= await userHelpers.getWishlistCount(req.session.user._id)
     totalvalue= await userHelpers.getTotalAmound(req.session.user._id)
      product= await  userHelpers.getProduct(req.params.id)
-      console.log(product)
-      res.render('user/product',{layout:'userLayout', wcount,'user':req.session.user,product,userloggedin,userss:true,category,totalvalue,cartProduct,cartCount})
-  }
-  catch{
-  
+      
+      if(product){
+        res.render('user/product',{layout:'userLayout', wcount,'user':req.session.user,product,userloggedin,userss:true,category,totalvalue,cartProduct,cartCount})
+ 
+      }else{
+        res.redirect('/')
+      }
+       }
+  catch(err){
+    res.redirect('/')
   }
  
   })
@@ -239,7 +244,7 @@ router.post('/add-to-cart',verifyuserLogin, (req,res)=>{
         res.redirect('back')
       })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
    
@@ -258,7 +263,7 @@ router.get('/move-to-cart/:pro',verifyuserLogin,async(req,res)=>{
       })
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -273,7 +278,7 @@ router.get('/add-to-wishlist/:pro',verifyuserLogin, async(req,res)=>{
       })
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -285,7 +290,7 @@ router.get('/remove-from-wishlist/:pro',verifyuserLogin,(req,res)=>{
   res.json(data)
   })
   }
-  catch{
+  catch(err){
     res.redirect('/wishlist')
   }
  
@@ -313,7 +318,7 @@ router.get('/cart',verifyuserLogin,async(req,res)=>{
    }
    res.render('user/cart',{layout:'userLayout', wcount,cartProduct,'user':req.session.user,userss:true,userloggedin,cartCount,category,totalvalue})
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -326,7 +331,7 @@ router.post('/change-product-quantity',verifyuserLogin,(req,res,next)=>{
    res.json(response)
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
   
@@ -353,7 +358,7 @@ router.get('/wishlist',verifyuserLogin,async(req,res)=>{
     
     res.render('user/wishlist',{layout:'userLayout', wcount,'user':req.session.user,userss:true,category,userloggedin,cartCount,wishlist,cartProduct,totalvalue})
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
   
@@ -364,7 +369,7 @@ router.get('/remove-from-cart/:proId',verifyuserLogin,(req,res)=>{
       res.json(response)
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -386,7 +391,7 @@ router.get('/checkout',verifyuserLogin, async(req,res)=>{
     
      })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -408,7 +413,7 @@ router.get('/orders',verifyuserLogin,async(req,res)=>{
     let orders=await userHelpers.getUserOrders(req.session.user._id)
     res.render('user/orders',{layout:'userLayout', userss:true,user:req.session.user,orders,category,cartProduct,cartCount,wcount,totalvalue})
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -417,7 +422,7 @@ router.get('/profile',verifyuserLogin,async(req,res)=>{
   try{
 
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
   let cartProduct={}
@@ -444,7 +449,12 @@ router.post('/place-order',verifyuserLogin,async(req,res)=>{
     console.log(req.body);
     let coupon=false
     let discount=0
-   coupon=await userHelpers.getCoupon(req.body.couponCode)
+    await userHelpers.checkCouponUsed(req.params.cod,req.session.user._id).then(async(response)=>{
+      if(response.coupon=='Valid'){
+        coupon=await userHelpers.getCoupon(req.body.couponCode)
+      }
+    })
+  
   if(coupon){
     discount=(totalPrice/100)*parseInt(coupon.couponValue)
   }
@@ -463,7 +473,7 @@ router.post('/place-order',verifyuserLogin,async(req,res)=>{
      
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -483,9 +493,9 @@ router.get('/order-success',verifyuserLogin,async(req,res)=>{
      category=await userHelpers.viewCategories()
     wcount= await userHelpers.getWishlistCount(req.session.user._id)
     totalvalue= await userHelpers.getTotalAmound(req.session.user._id)
-    res.render('user/order-success',{layout:'userLayout',userss:true,cartCount,cartProduct,wcount,totalvalue,category })
+    res.render('user/order-success',{layout:'userLayout',userss:true,cartCount,cartProduct,wcount,totalvalue,category,user:req.session.user })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
   
@@ -526,28 +536,25 @@ router.get('/view-order-products/:id/:item',verifyuserLogin,async(req,res)=>{
     console.log(orders[0]);
     res.render('user/view-order-products',{layout:'userLayout', user:req.session.user,orders,userss:true,cartCount,cartProduct,wcount,totalvalue,category})
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
 })
 router.post('/verify-payment',verifyuserLogin,(req,res)=>{
-  
-  try{
-    console.log(req.body);
+   console.log(req.body);
     userHelpers.verifyPayment(req.body).then(()=>{
   userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
    console.log('Payment success');
+   
     res.json({status:true})
+    console.log(response);
   })
     }).catch((err)=>{
-     
-      res.json({status:false})
+     console.log(err);
+       res.json({status:false})
     })
-  }
-  catch{
-    res.redirect('/')
-  }
+  
  
 })
 
@@ -558,7 +565,7 @@ router.post('/add-address',verifyuserLogin,(req,res)=>{
     res.redirect('/checkout')
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -579,7 +586,7 @@ router.get('/contact',verifyuserLogin,async(req,res)=>{
     totalvalue= await userHelpers.getTotalAmound(req.session.user._id)
     res.render("user/contact",{layout:'userLayout', user:req.session.user,userss:true,wcount,cartCount,cartProduct,category,totalvalue})
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -591,7 +598,7 @@ router.get('/orderCancel/:id/:item',verifyuserLogin,(req,res)=>{
       res.redirect('/orders')
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
   
@@ -606,7 +613,7 @@ router.post('/changeProfilePhoto',verifyuserLogin,(req,res)=>{
     }
     res.redirect('/profile')
   }
-  catch{
+  catch(err){
     res.redirect('/profile')
   }
   
@@ -619,7 +626,7 @@ router.post('/userDataUpdate',verifyuserLogin,(req,res)=>{
       res.redirect('/profile')
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -630,7 +637,7 @@ router.get('/forgot-password',(req,res)=>{
     res.render('user/forgot-password',{layout:'userLayout',userss:true,emailError})
     req.session.emailError=null
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -642,7 +649,7 @@ router.get('/resetOtp',(req,res)=>{
     res.render('user/reset-password-otp',{layout:'userLayout',num,userss:true,otpError})
     req.session.otpError=false
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -673,7 +680,7 @@ router.post('/forgot-password',(req,res)=>{
       
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -690,7 +697,7 @@ router.post('/reset-otp',(req,res)=>{
     }
   })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
 
@@ -703,7 +710,7 @@ router.post('/resetPassword',(req,res)=>{
       res.redirect('/login')
    })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
 
@@ -713,7 +720,7 @@ router.get('/invoice/:id/:item',verifyuserLogin,async (req,res)=>{
     let orders=await userHelpers.getOrderProducts(req.params.id,req.params.item)
     res.render('user/invoice',{layout:'userLayout', orders})
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
@@ -724,29 +731,60 @@ router.post('/edit-delivery-address',verifyuserLogin,(req,res)=>{
       res.redirect('/profile')
     })
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
   
 })
-router.get('/apply-coupon/:cod',verifyuserLogin,(req,res)=>{
+router.get('/apply-coupon/:cod',verifyuserLogin,async(req,res)=>{
   try{
-    userHelpers.getCoupon(req.params.cod).then(async(data)=>{
-      totalvalue= await userHelpers.getTotalAmound(req.session.user._id)
-      let discount=0
-       discount=(totalvalue/100)*parseInt(data.couponValue)
-      totalPrice=totalvalue-discount
-     
-      res.json({status:true,totalPrice,discount})
-     
-     })
+    userHelpers.checkCouponUsed(req.params.cod,req.session.user._id).then((response)=>{
+      console.log(response);
+      if(response.coupon=='Used'){
+        res.json({status:false})
+      }else{
+        userHelpers.getCoupon(req.params.cod).then(async(data)=>{
+          totalvalue= await userHelpers.getTotalAmound(req.session.user._id)
+          let discount=0
+           discount=(totalvalue/100)*parseInt(data.couponValue)
+          totalPrice=totalvalue-discount
+         
+          res.json({status:true,totalPrice,discount})
+         
+         })
+      }
+    })
+   
   }
-  catch{
+  catch(err){
     res.redirect('/')
   }
  
 
+})
+router.post('/search',verifyuserLogin,async(req,res)=>{
+  try{
+    let cartProduct={}
+    let cartCount=null
+    let wcount=null
+    let totalvalue=0
+    
+    let category=null
+   
+    cartCount= await userHelpers.getCartCount(req.session.user._id)
+    cartProduct=await userHelpers.getCartProducts(req.session.user._id)
+     category=await userHelpers.viewCategories()
+    wcount= await userHelpers.getWishlistCount(req.session.user._id)
+    totalvalue= await userHelpers.getTotalAmound(req.session.user._id)
+    userHelpers.search(req.body.search).then((product)=>{
+  res.render('user/searchResult',{layout:'userLayout', wcount,cartProduct,cartCount,totalvalue,userloggedin,userss:true,category,product ,'user':req.session.user})
+  
+    })
+  }
+  catch(err){
+    res.redirect('/')
+  }
 })
 
 

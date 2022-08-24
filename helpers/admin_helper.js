@@ -229,7 +229,9 @@ module.exports={
                                 
                                 updateBanner:(data)=>{
                                     return new Promise(async(resolve,reject)=>{
-                                        db.get().collection(collection.BANNER_COLLECTION).updateOne({Name:data.Name},{$set:{Name:data.Name,Category:data.Category,Description:data.Description}},{upsert:true}).then((data)=>{
+                                        db.get().collection(collection.BANNER_COLLECTION).updateOne({Name:data.Name},
+                                            {$set:{Name:data.Name,Category:data.Category,Description:data.Description}},
+                                            {upsert:true}).then((data)=>{
                                             console.log(data);
                                             resolve()
                                         })
@@ -289,7 +291,275 @@ module.exports={
                                   console.log(coupons);
                                   resolve(coupons)
                                     })
-                                }
+                                },
+                                totalUsers:()=>{
+                                return new Promise(async(resolve,reject)=>{
+                                    try{
+                                        let totalUser= await db.get().collection(collection.USER_COLLECTION).estimatedDocumentCount()
+                                        resolve(totalUser)
+                                    }
+                                    catch(err){
+                                        reject(err)
+                                    }
+                                    
+                                })
+                                },
+                                totalOrder:()=>{
+                                    return new Promise(async(resolve,reject)=>{
+                                        try{
+                                            let totalOrder= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                                                {
+                                                  '$unwind': {
+                                                    'path': '$products'
+                                                  }
+                                                }, {
+                                                  '$unwind': {
+                                                    'path': '$products.products'
+                                                  }
+                                                }, {
+                                                  '$addFields': {
+                                                    'total': {
+                                                      '$multiply': [
+                                                        '$products.products.quantity', '$products.products.product.Price'
+                                                      ]
+                                                    }
+                                                  }
+                                                }, {
+                                                  '$addFields': {
+                                                    'discount': {
+                                                      '$divide': [
+                                                        {
+                                                          '$multiply': [
+                                                            '$total', '$discountDetails.couponValue'
+                                                          ]
+                                                        }, 100
+                                                      ]
+                                                    }
+                                                  }
+                                                }, {
+                                                  '$addFields': {
+                                                    'finalPrice': {
+                                                      '$subtract': [
+                                                        '$total', '$discount'
+                                                      ]
+                                                    }
+                                                  }
+                                                }
+                                              ]).toArray()
+                                             
+                                            resolve(totalOrder.length)
+                                        }
+                                        catch(err){
+                                            reject(err)
+                                        }
+                                        
+                                    })
+                                    },
+                                    totalSale:()=>{
+                                        return new Promise(async(resolve,reject)=>{
+                                         let totalSale= await  db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                                            {
+                                              '$unwind': {
+                                                'path': '$products'
+                                              }
+                                            }, {
+                                              '$unwind': {
+                                                'path': '$products.products'
+                                              }
+                                            }, {
+                                              '$match': {
+                                                '$or': [
+                                                  {
+                                                    'products.products.orderStatus': 'Placed'
+                                                  }, {
+                                                    'products.products.orderStatus': 'Shipped'
+                                                  }, {
+                                                    'products.products.orderStatus': 'Delivered'
+                                                  }
+                                                ]
+                                              }
+                                            }, {
+                                              '$group': {
+                                                '_id': null, 
+                                                'sum': {
+                                                  '$sum': '$totalAmount'
+                                                }
+                                              }
+                                            }
+                                          ]) .toArray()
+                                          resolve(totalSale[0].sum)
+                                        })
+                                    },
+                                    totalCOD:()=>{
+                                        return new Promise(async(resolve,reject)=>{
+                                            let totalCOD= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                                                {
+                                                  '$unwind': {
+                                                    'path': '$products'
+                                                  }
+                                                }, {
+                                                  '$unwind': {
+                                                    'path': '$products.products'
+                                                  }
+                                                }, {
+                                                  '$match': {
+                                                    '$and': [
+                                                      {
+                                                        'paymentMethod': 'COD'
+                                                      }, {
+                                                        '$or': [
+                                                          {
+                                                            'products.products.orderStatus': 'Placed'
+                                                          }, {
+                                                            'products.products.orderStatus': 'Shipped'
+                                                          }, {
+                                                            'products.products.orderStatus': 'Delivered'
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                }
+                                              ]).toArray()
+                                              resolve(totalCOD.length)
+                                        })
+                                    },
+                                    onlinePaymentCount:()=>{
+                                        return new Promise(async(resolve,reject)=>{
+                                            let onlinePaymentCount= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                                                {
+                                                  '$unwind': {
+                                                    'path': '$products'
+                                                  }
+                                                }, {
+                                                  '$unwind': {
+                                                    'path': '$products.products'
+                                                  }
+                                                }, {
+                                                  '$match': {
+                                                    '$and': [
+                                                      {
+                                                        'paymentMethod': 'Online'
+                                                      }, {
+                                                        '$or': [
+                                                          {
+                                                            'products.products.orderStatus': 'Placed'
+                                                          }, {
+                                                            'products.products.orderStatus': 'Shipped'
+                                                          }, {
+                                                            'products.products.orderStatus': 'Delivered'
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                }
+                                              ]).toArray()
+                                              resolve(onlinePaymentCount.length)
+                                        })
+                                    },
+                                    totalPending:()=>{
+                                        return new Promise(async(resolve,reject)=>{
+                                         let totalPending=await   db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                                                {
+                                                  '$unwind': {
+                                                    'path': '$products'
+                                                  }
+                                                }, {
+                                                  '$unwind': {
+                                                    'path': '$products.products'
+                                                  }
+                                                }, {
+                                                  '$match': {
+                                                    'products.products.orderStatus': 'Pending'
+                                                  }
+                                                }
+                                              ]).toArray()
+                                              resolve(totalPending.length)
+                                        })
+                                    },
+                                    totalPlaced:()=>{
+                                        return new Promise(async(resolve,reject)=>{
+                                         let totalPlaced=await   db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                                                {
+                                                  '$unwind': {
+                                                    'path': '$products'
+                                                  }
+                                                }, {
+                                                  '$unwind': {
+                                                    'path': '$products.products'
+                                                  }
+                                                }, {
+                                                  '$match': {
+                                                    'products.products.orderStatus': 'Placed'
+                                                  }
+                                                }
+                                              ]).toArray()
+                                              resolve(totalPlaced.length)
+                                        })
+                                    },
+                                    totalShipped:()=>{
+                                        return new Promise(async(resolve,reject)=>{
+                                         let totalShipped=await   db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                                                {
+                                                  '$unwind': {
+                                                    'path': '$products'
+                                                  }
+                                                }, {
+                                                  '$unwind': {
+                                                    'path': '$products.products'
+                                                  }
+                                                }, {
+                                                  '$match': {
+                                                    'products.products.orderStatus': 'Shipped'
+                                                  }
+                                                }
+                                              ]).toArray()
+                                              resolve(totalShipped.length)
+                                        })
+                                    },
+                                    totalDelivered:()=>{
+                                        return new Promise(async(resolve,reject)=>{
+                                         let totalDelivered=await   db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                                                {
+                                                  '$unwind': {
+                                                    'path': '$products'
+                                                  }
+                                                }, {
+                                                  '$unwind': {
+                                                    'path': '$products.products'
+                                                  }
+                                                }, {
+                                                  '$match': {
+                                                    'products.products.orderStatus': 'Delivered'
+                                                  }
+                                                }
+                                              ]).toArray()
+
+                                              resolve(totalDelivered.length)
+                                        })
+                                    },
+                                    totalCancelled:()=>{
+                                        return new Promise(async(resolve,reject)=>{
+                                         let totalCancelled=await   db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                                                {
+                                                  '$unwind': {
+                                                    'path': '$products'
+                                                  }
+                                                }, {
+                                                  '$unwind': {
+                                                    'path': '$products.products'
+                                                  }
+                                                }, {
+                                                  '$match': {
+                                                    'products.products.orderStatus': 'Cancelled'
+                                                  }
+                                                }
+                                              ]).toArray()
+                                              resolve(totalCancelled.length)
+                                        })
+                                    }
+                                
             
                  
             }

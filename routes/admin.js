@@ -1,4 +1,7 @@
 let express = require('express');
+const async = require('hbs/lib/async');
+const { Code } = require('mongodb');
+const { totalSale, totalOrder, onlinePaymentCount } = require('../helpers/admin_helper');
 //const { response } = require('../app');
 let router = express.Router();
 let adminHelper=require('../helpers/admin_helper');
@@ -12,7 +15,7 @@ const verifyAdminLogin=(req,res,next)=>{
       res.redirect('/admin')
      }
   }
-  catch{
+  catch(err){
    res.redirect('/admin')
   }
   
@@ -30,16 +33,46 @@ router.get('/', function(req, res) {
       }
       
   }
-  catch{
+  catch(err){
    res.redirect('/admin')
   }
   
 });
-router.get('/admindashboard',verifyAdminLogin,(req,res)=>{
+router.get('/admindashboard',verifyAdminLogin,async(req,res)=>{
    try{
-    res.render('admin/admin_index' ,{layout:'adminLayout',adminLoggedin,dashboard:true})
+    const allData = await Promise.all
+    ([
+      
+      adminHelper.totalUsers(),
+      adminHelper.totalSale(),
+      adminHelper.totalOrder(),
+      adminHelper.onlinePaymentCount(),
+      adminHelper.totalCOD(),
+      adminHelper.totalPending(),
+      adminHelper.totalPlaced(),
+      adminHelper.totalShipped(),
+      adminHelper.totalDelivered(),
+      adminHelper.totalCancelled(),
+      
+    ]);
+   let totalRevenue=allData[1]*20/100
+    
+
+    res.render('admin/admin_index' ,{layout:'adminLayout',adminLoggedin,dashboard:true,
+    totalUser:allData[0],
+    totalSale:allData[1],
+    totalOrder:allData[2],
+    onlinePayment:allData[3],
+    cashOnDelivery:allData[4],
+    pending :allData[5],
+    placed:allData[6],
+    shipped:allData[7],
+    delivered:allData[8],
+    cancelled:allData[9],
+    totalRevenue
+  })
    }
-   catch{
+   catch(err){
     res.redirect('/admin')
    }
 })
@@ -61,7 +94,7 @@ try{
     }
   })
 }
-catch{
+catch(err){
   res.redirect('/admin')
 }
 })
@@ -71,7 +104,7 @@ router.get('/adminlogout',(req,res)=>{
     adminLoggedin=false;
     res.redirect('/admin')
   }
-  catch{
+  catch(err){
     res.redirect('/admin')
   }
  
@@ -83,7 +116,7 @@ router.get('/vendors',verifyAdminLogin,(req,res)=>{
       res.render('admin/admin-vendorlist',{layout:'adminLayout',adminLoggedin,'vendorrequest':data.vendorrequest,'vendors':data.vendors})
     })
   }
-  catch{
+  catch(err){
     res.redirect('/admin')
   }
   
@@ -95,7 +128,7 @@ router.get('/users',verifyAdminLogin,(req,res)=>{
       res.render('admin/admin-userlist',{layout:'adminLayout',adminLoggedin,users})
     })
   }
-  catch{
+  catch(err){
     res.redirect('/admin')
   }
   
@@ -108,7 +141,7 @@ router.get('/admin-viewproducts',verifyAdminLogin,(req,res,next)=>{
       res.render('admin/admin-viewproducts',{layout:'adminLayout',admin:true,products,adminLoggedin:true})
 })
   }
-  catch{
+  catch(err){
     res.redirect('/admin')
   }
   
@@ -119,7 +152,7 @@ router.get('/add-product',verifyAdminLogin,(req,res)=>{
       res.render('admin/admin-addproduct',{layout:'adminLayout',admin:true,adminLoggedin:true,category})
     })
   }
-  catch{
+  catch(err){
     res.redirect('/admin')
   }
  
@@ -140,7 +173,7 @@ router.post('/add-product',verifyAdminLogin,(req,res)=>{
       })
       })
   }
-  catch{
+  catch(err){
     res.redirect('/admin')
   }
   
@@ -152,7 +185,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
       res.redirect('/admin/admin-viewproducts')
     })
   }
-  catch{
+  catch(err){
     res.redirect('/admin')
   }
    
@@ -164,7 +197,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
       res.render('admin/admin-editproduct',{layout:'adminLayout',product,adminLoggedin,category})
      })
     }
-    catch{
+    catch(err){
       res.redirect('/admin')
     }
 
@@ -182,7 +215,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
           image.mv('./public/product-images/'+id+'.jpg')
         }
       }
-      catch{
+      catch(err){
         res.redirect('/admin')
       }
      
@@ -194,7 +227,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
           res.redirect('/admin/users')
         } )
       }
-      catch{
+      catch(err){
         res.redirect('/admin')
       }
     
@@ -205,7 +238,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
           res.redirect('/admin/users')
         } )
       }
-      catch{
+      catch(err){
         res.redirect('/admin')
       }
       
@@ -217,7 +250,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
             res.redirect('/admin/users')
           }) 
         }
-        catch{
+        catch(err){
           res.redirect('/admin')
         }
        
@@ -229,7 +262,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
             res.redirect('/admin/vendors')
           } )
         }
-        catch{
+        catch(err){
           res.redirect('/admin')
         }
        
@@ -240,7 +273,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
               res.redirect('/admin/vendors')
             } )
           }
-          catch{
+          catch(err){
             res.redirect('/admin')
           }
           
@@ -252,7 +285,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                 res.redirect('/admin/vendors')
               })
             }
-            catch{
+            catch(err){
               res.redirect('/admin')
             }
              
@@ -260,11 +293,11 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
 
             router.get('/addCategory',verifyAdminLogin,(req,res)=>{
               try{
-                adminHelper.viewCategories().then((category)=>{
-                  res.render('admin/admin-categoryManage',{layout:'adminLayout',adminLoggedin,category})
+                adminHelper.viewCategories().then((categoryy)=>{
+                  res.render('admin/admin-categoryManage',{layout:'adminLayout',adminLoggedin,categoryy})
                 })
               }
-              catch{
+              catch(err){
                 res.redirect('/admin')
               }
                
@@ -278,7 +311,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                     res.redirect('/admin/addCategory')
                   })
                 }
-                catch{
+                catch(err){
                   res.redirect('/admin')
                 }
                
@@ -291,7 +324,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                     res.redirect('/admin/addCategory')
                   })
                 }
-                catch{
+                catch(err){
                   res.redirect('/admin')
                 }
                
@@ -304,7 +337,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                     res.redirect('/admin/vendors')
                   })
                 }
-                catch{
+                catch(err){
                   res.redirect('/admin')
                 }
                
@@ -316,7 +349,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                     res.redirect('/admin/vendors')
                   })
                 }
-                catch{
+                catch(err){
                   res.redirect('/admin')
                 }
                
@@ -342,7 +375,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                     res.render('admin/admin-viewOrders',{layout:'adminLayout',adminLoggedin,orders})
                     })
                 }
-                catch{
+                catch(err){
                   res.redirect('/admin')
                 }
                
@@ -350,8 +383,9 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                 })
               
              
-              router.get('/bannerManage',verifyAdminLogin,(req,res)=>{
+              router.get('/bannerManage',verifyAdminLogin,async(req,res)=>{
                 try{
+                 let category=await adminHelper.viewCategories()
                   adminHelper.getBanner().then((Banner)=>{
                     let slider1=Banner[0]
                     let slider2=Banner[1]
@@ -359,10 +393,10 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                     let banner1=Banner[3]
                     let banner2=Banner[4]
                     let banner3=Banner[5]
-                    res.render("admin/admin-bannerManage",{layout:'adminLayout',adminLoggedin,slider1,slider2,slider3,banner1,banner2,banner3})
+                    res.render("admin/admin-bannerManage",{layout:'adminLayout',adminLoggedin,slider1,slider2,slider3,banner1,banner2,banner3,category,banner:true})
                   })
                 }
-                catch{
+                catch(err){
                   res.redirect('/admin')
                 }
                 
@@ -376,7 +410,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                     image.mv('./public/banner-images/'+req.body.Name+'.jpg')
                   })
                 }
-                catch{
+                catch(err){
                   res.redirect('/admin')
                 }
 
@@ -389,7 +423,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                     res.redirect('/admin/orders')
                   })
                 }
-                catch{
+                catch(err){
                   res.redirect('/admin')
                 }
                
@@ -401,7 +435,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                     res.redirect('/admin/orders')
                   })
                 }
-                catch{
+                catch(err){
                   res.redirect('/admin')
                 }
                 
@@ -414,7 +448,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                     res.redirect('/admin/orders')
                   })
                 }
-                catch{
+                catch(err){
                   res.redirect('/admin')
                 }
                
@@ -427,7 +461,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                     res.render('admin/admin-coupons',{layout:'adminLayout',adminLoggedin,coupons})
                   })
                 }
-                catch{
+                catch(err){
                   res.redirect('/admin')
                 }
                
@@ -441,7 +475,7 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                   
                   })
                 }
-                catch{
+                catch(err){
                   res.redirect('/admin')
                 }
                
