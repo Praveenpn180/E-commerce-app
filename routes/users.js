@@ -453,7 +453,6 @@ router.post('/place-order',verifyuserLogin,async(req,res)=>{
     products=await userHelpers.getCartProductslist(req.body.userId)
     totalPrice=await userHelpers.getTotalAmound(req.body.userId)
     address=await userHelpers.getDeliveryAddress(req.body.userId,req.body.address)
-    console.log(req.body);
     let coupon=false
     let discount=0
     await userHelpers.checkCouponUsed(req.params.cod,req.session.user._id).then(async(response)=>{
@@ -747,17 +746,25 @@ router.post('/edit-delivery-address',verifyuserLogin,(req,res)=>{
 router.get('/apply-coupon/:cod',verifyuserLogin,async(req,res)=>{
   try{
     userHelpers.checkCouponUsed(req.params.cod,req.session.user._id).then((response)=>{
-      console.log(response);
+      
       if(response.coupon=='Used'){
         res.json({status:false})
       }else{
         userHelpers.getCoupon(req.params.cod).then(async(data)=>{
-          totalvalue= await userHelpers.getTotalAmound(req.session.user._id)
           let discount=0
-           discount=(totalvalue/100)*parseInt(data.couponValue)
-          totalPrice=totalvalue-discount
+          if(data==null){
+            console.log('fffff');
+            res.json({status:false,discount})
+          }else{
+            totalvalue= await userHelpers.getTotalAmound(req.session.user._id)
+            console.log('hhhh');
+             discount=(totalvalue/100)*parseInt(data.couponValue)
+            totalPrice=totalvalue-discount
+           
+            res.json({status:true,totalPrice,discount})
+          }
          
-          res.json({status:true,totalPrice,discount})
+         
          
          })
       }
@@ -792,6 +799,11 @@ router.post('/search',verifyuserLogin,async(req,res)=>{
   catch(err){
     res.redirect('/')
   }
+})
+router.get('/deleteAddress/:id',verifyuserLogin,(req,res)=>{
+  userHelpers.deleteAddress(req.params.id,req.session.user._id).then(()=>{
+    res.redirect('/profile')
+  })
 })
 
 

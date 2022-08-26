@@ -152,7 +152,8 @@
             value="{{address.State}}">
           <label for="firstName">Pincode</label> <input type="text" name="Pincode" id="" placeholder="Pincode"
             value="{{address.Pincode}}">
-            <button class="btn btn-outline-primary" type="submit" >Update Address</button>
+            <button class="btn btn-outline-primary" type="submit" >Update</button>
+            <a href="/deleteAddress/{{address.addressId}}" class="btn btn-outline-danger">Delete</a>
         </form>
 
       </div>

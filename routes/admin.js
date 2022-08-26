@@ -481,6 +481,12 @@ router.get('/delete-product/:id',verifyAdminLogin,(req,res)=>{
                
               
               })
+            
+              router.get('/deleteCoupon/:id',verifyAdminLogin,(req,res)=>{
+                adminHelper.deleteCoupon(req.params.id).then(()=>{
+                  res.redirect('/admin/coupons')
+                })
+              })
               router.get('/*',(req,res)=>{
                 res.render('admin/admin-error')
               })

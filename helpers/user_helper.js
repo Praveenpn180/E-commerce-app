@@ -745,13 +745,14 @@ module.exports = {
     },
     checkCouponUsed:(coupon,userId)=>{
         return new Promise(async(resolve,reject)=>{
-          let data=await  db.get().collection(collection.COUPON_COLLECTION).find({couponCode:coupon,couponAppliedUser:[userId]}).toArray()
-          console.log(data);
-          if(data==null){
-            resolve({coupon:'Valid'})
+          let data=await  db.get().collection(collection.COUPON_COLLECTION).find({couponCode:coupon,couponAppliedUser:{$in:[userId]}}).toArray()
+        
+          if(data[0]){
+            resolve({coupon:'Used'})
           
           }else{
-            resolve({coupon:'Used'})
+        
+            resolve({coupon:'Valid'})
           }
          
         })
@@ -761,7 +762,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let offer = await db.get().collection(collection.COUPON_COLLECTION).findOne({ couponCode: coupon })
             resolve(offer)
-            console.log(offer);
+           
         })
     }
     ,
@@ -777,9 +778,12 @@ module.exports = {
             resolve(result)
 
         })
+    },
+    deleteAddress:(id,userId)=>{
+        return new Promise(async(resolve,reject)=>{
+            await db.get().collection(collection.USER_COLLECTION).updateOne({_id:objectid(userId)},{$pull:{'address':{'addressId':objectid(id)}}})
+            resolve()
+        })
     }
-
-
-
 
 }

@@ -141,7 +141,7 @@ module.exports={
                                 },
                                 deleteVendor:(vendorid)=>{
                                     return new Promise((resolve,reject)=>{
-                                      console.log(prodId); 
+                                     
                                       db.get().collection(collection.VENDOR_COLLECTION).deleteOne({_id:objectid(vendorid)}).then((response)=>{
                                         console.log(response);
                                         resolve(response)
@@ -273,7 +273,7 @@ module.exports={
                                     return new Promise(async(resolve,reject)=>{
                                         
                                      let expire=parseInt(data.validity)*86400
-                                      db.get().collection(collection.COUPON_COLLECTION).createIndex( { "lastModifiedDate": 1 }, { expireAfterSeconds: expire } )
+                                     
                                       
                                       await  db.get().collection(collection.COUPON_COLLECTION).insertOne({'couponCode':data.couponCode,
                                         'offerType':data.offerType,
@@ -558,6 +558,12 @@ module.exports={
                                               ]).toArray()
                                               resolve(totalCancelled.length)
                                         })
+                                    },
+                                    deleteCoupon:(id)=>{
+                                      return new Promise(async(resolve,reject)=>{
+                                       await db.get().collection(collection.COUPON_COLLECTION).deleteOne({_id:objectid(id)})
+                                        resolve()
+                                      })
                                     }
                                 
             
