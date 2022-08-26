@@ -4,13 +4,9 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 const serviceSid= process.env.TWILIO_SERVICE_SID
-const async=require('hbs/lib/async')
 module.exports={
     doSms:(noData)=>{
-        console.log(noData);
-        console.log(accountSid);
-        console.log(authToken);
-        console.log(serviceSid);
+      
         let res={}
         return new Promise(async(resolve,reject)=>{
             client.verify.services(serviceSid).verifications.create({

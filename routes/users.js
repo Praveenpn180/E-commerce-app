@@ -2,9 +2,6 @@ let express = require('express');
 let router = express.Router();
 const userHelpers=require('../helpers/user_helper')
 const twilioHelper=require("../helpers/twilio_helper");
-const async = require('hbs/lib/async');
-const { response } = require('express');
-const { Db } = require('mongodb');
 let userloggedin=false
 let user=false
 
@@ -114,7 +111,10 @@ router.post('/signup',(req,res)=>{
 
 router.get('/otp',(req,res)=>{
   try{
-    res.render('user/userotp',{layout:'userLayout', user:true})
+    let otpError= req.session.otpError
+    let num=req.session.body.phone.slice(6)
+    res.render('user/userotp',{layout:'userLayout', user:true,num,otpError})
+    req.session.otpError=false
   }
   catch(err){
     res.redirect('/')
@@ -129,6 +129,7 @@ router.post('/otp',(req,res)=>{
         res.redirect('/login')
       })
     }else{
+      req.session.otpError='INVALID OTP'
       res.redirect('/otp')
     }
   })

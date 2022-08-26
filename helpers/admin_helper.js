@@ -1,7 +1,6 @@
 let db=require('../config/connections') 
 let collection=require('../config/collection')
 const bcrypt=require('bcrypt')
-const async=require('hbs/lib/async')
 const { USER_COLLECTION } = require('../config/collection')
 const { response } = require('express')
 let objectid=require('mongodb').ObjectId
