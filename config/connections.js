@@ -5,7 +5,7 @@ const state={
 
 module.exports.connect=function(done) {
     const url='mongodb://localhost:27017'
-    const dbname='electronics-store'
+    const dbname='zango-store'
 
     mongoClient.connect(url,(err,data)=>{
         if (err) return done(err)
